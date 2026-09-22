@@ -42,7 +42,56 @@ function initGame() {
         card.dataset.value = imgUrl; 
         
         board.appendChild(card);
+        card.addEventListener('click', () => handleCardClick(card));
     });
+}
+
+function revealCard(card) {
+    const img = document.createElement("img");
+    img.src = card.dataset.value;
+    img.alt = "Image de mémoire";
+    card.appendChild(img);
+}
+
+function checkMatch() {
+    const isMatch = firstCard.dataset.value === secondCard.dataset.value;
+    
+    if (isMatch) {
+        firstCard.classList.add("matched");
+        secondCard.classList.add("matched");
+        matchedCount += 2;
+        resetTurn();
+        // checkVictory();
+    } else {
+        setTimeout(() => {
+            firstCard.innerHTML = "";
+            secondCard.innerHTML = "";
+            resetTurn(); 
+        }, 800);
+    }
+}
+
+function resetTurn() {
+    firstCard = null;
+    secondCard = null;
+    lockBoard = false;
+}
+
+function handleCardClick(card){
+    if (lockBoard || card.classList.contains("matched") || card === firstCard || card.firstChild) {
+        return; 
+    }
+
+    revealCard(card);
+    if (!firstCard) {
+        firstCard = card; 
+        return;
+    }
+    secondCard = card;
+    lockBoard = true;
+    moves++;
+    movesDisplay.textContent = `Coups : ${moves}`;
+    checkMatch();
 }
 
 initGame();
