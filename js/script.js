@@ -29,6 +29,19 @@ function shuffle(array) {
 }
 
 function initGame() {
+    board.innerHTML = "";
+    firstCard = null;
+    secondCard = null;
+    lockBoard = false;
+    moves = 0;
+    matchedCount = 0;
+    seconds = 0;
+    clearInterval(timerInterval);
+    startTimer();
+
+    movesDisplay.textContent = `Coups : ${moves}`;
+    timerDisplay.textContent = `Temps : 00:00`;
+
     shuffle(cards);
 
     //boucle sur le tableau pour creer l'interface
@@ -61,7 +74,7 @@ function checkMatch() {
         secondCard.classList.add("matched");
         matchedCount += 2;
         resetTurn();
-        // checkVictory();
+        checkVictory();
     } else {
         setTimeout(() => {
             firstCard.innerHTML = "";
@@ -92,6 +105,26 @@ function handleCardClick(card){
     moves++;
     movesDisplay.textContent = `Coups : ${moves}`;
     checkMatch();
+}
+
+function formatTime(sec){
+    const s = String(sec % 60).padStart(2,"0");
+    const min = String(Math.floor(sec/60)).padStart(2,"0");
+    return `${min}:${s}`;
+}
+
+function startTimer() {
+    timerInterval = setInterval(() => {
+    seconds++;
+    timerDisplay.textContent = `Temps : ${formatTime(seconds)}`;
+    }, 1000);
+}
+
+function checkVictory(){
+    if(matchedCount === cards.length){
+        clearInterval(timerInterval);
+        resultDisplay.textContent = `Victoire ! Coups : ${moves} | Temps : ${formatTime(seconds)}`;
+    }
 }
 
 initGame();
