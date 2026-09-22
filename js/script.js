@@ -24,6 +24,25 @@ cards = [...images, ...images];
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]]; // On échange les deux places
+    [array[i], array[j]] = [array[j], array[i]]; 
     }
 }
+
+function initGame() {
+    shuffle(cards);
+
+    //boucle sur le tableau pour creer l'interface
+    cards.forEach((imgUrl) => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+        
+        card.setAttribute("role", "button");
+        card.setAttribute("tabindex", "0");
+        
+        card.dataset.value = imgUrl; 
+        
+        board.appendChild(card);
+    });
+}
+
+initGame();
