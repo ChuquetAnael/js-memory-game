@@ -16,10 +16,37 @@ let seconds = 0;
 let timerInterval = null;
 
 const images = [];
-for (let i = imgStart; i <= imgStart + 7; i++) {
-    images.push(`https://picsum.photos/seed/${i}/${dimension}/${dimension}`);
+
+let imageSource = "api";
+
+function picsum() {
+    images.length = 0;
+    for (let i = imgStart; i <= imgStart + 7; i++) {
+        images.push(`https://picsum.photos/seed/${i}/${dimension}/${dimension}`);
+    }
+    cards = [...images, ...images];
+    imageSource = "api";
+    initGame();
 }
-cards = [...images, ...images];
+
+function prend_image() {
+    images.length = 0;
+    const totalImagesDisponibles = 13; 
+    
+    let pioche = [];
+    for (let i = 1; i <= totalImagesDisponibles; i++) {
+        pioche.push(i);
+    }
+    
+    shuffle(pioche);
+    for (let i = 1; i <= 8; i++) {
+        images.push(`images/${pioche[i]}.jpg`); 
+    }
+    cards = [...images, ...images];
+    imageSource = "local";
+    initGame();
+}
+
 
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -41,6 +68,16 @@ function initGame() {
 
     movesDisplay.textContent = `Coups : ${moves}`;
     timerDisplay.textContent = `Temps : 00:00`;
+
+    if (cards.length === 0) {
+        if (imageSource === "api") {
+            picsum();
+            return;
+        } else {
+             prend_image();
+             return;
+        }
+    }
 
     shuffle(cards);
 
@@ -127,4 +164,4 @@ function checkVictory(){
     }
 }
 
-initGame();
+picsum();
